@@ -1,0 +1,78 @@
+.mainContainer {
+  height: 91vh;
+}
+
+.dropdown {
+  height: 64px;
+
+  justify-content: space-between;
+
+  padding: 21px 20px 21px 16px;
+
+  background-color: #ffffff;
+
+  p {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 21px;
+    color: #130F26;
+  }
+
+  .icon {
+    margin-top: 6px;
+  }
+}
+
+.tabsContainer {
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+
+  background-color: #ffffff;
+}
+
+.buttonContainer {
+  height: 66px;
+  padding: 16px;
+
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(221, 223, 225, .5);
+
+  .button {
+    width: 100%;
+    text-transform: none;
+
+    font-size: 12px;
+
+    background-color: #114BC2;
+  }
+}
+
+.contentContainer {
+  flex-grow: 1;
+
+  padding: 16px;
+
+  background-color: #F4F5F7;
+
+  .textContent {
+    text-align: center;
+
+    color: #898793;
+    font-size: 13px;
+    line-height: 21px;
+  }
+}
+
+.centeredMessage {
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.projectsColumnText {
+  color: #898793;
+  line-height: 18px;
+}

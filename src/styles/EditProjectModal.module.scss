@@ -1,0 +1,19 @@
+.modal {
+  display: flex;
+  align-items: flex-end;
+}
+
+.container {
+  height: 142px;
+
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: #ffffff;
+
+  padding: 17px 16px;
+
+  .text {
+    color: #130F26;
+    margin-left: 16px;
+  }
+}
