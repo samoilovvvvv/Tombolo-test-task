@@ -2,8 +2,6 @@ import React from 'react'
 
 import styles from '../styles/EditProjectModal.module.scss';
 
-import _ from 'lodash'
-
 import {
   Grid,
   Modal,
@@ -15,26 +13,38 @@ import RenameIcon from './icons/RenameIcon';
 import FolderIcon from './icons/FolderIcon';
 import DeleteIcon from './icons/DeleteIcon';
 
+import { useProjectContext } from '../context/projectContext'
+import { useSnackbar } from 'notistack';
+
+import { deleteProject, updateProject } from '../api/requests';
+
 const EditProjectModal = ({
   open = false,
   id = null,
-  projects = [],
   onClose = () => {},
   onRename = () => {},
-  setProjects = () => {}
 }) => {
   
-  const archiveProjectHandler = () => {
-    const cloneProjects = _.cloneDeep(projects)
+  const { setData } = useProjectContext()
+  
+  const { enqueueSnackbar } = useSnackbar();
+  
+  const projectHandlers = async (request = () => {}) => {
+    try {
+      const response = await request(id)
     
-    for (let project in cloneProjects) {
-      if (cloneProjects[project].id === id) {
-        cloneProjects[project].archived = true
-      }
+      setData(response.data.data)
+    
+      enqueueSnackbar(response.data.message, {
+        variant: 'success'
+      })
+    } catch (error) {
+      enqueueSnackbar(error.response.data.message, {
+        variant: 'error'
+      })
+    } finally {
+      onClose()
     }
-    
-    setProjects(cloneProjects)
-    onClose()
   }
   
   return (
@@ -63,7 +73,7 @@ const EditProjectModal = ({
             item
             alignItems={'center'}
             style={{marginTop: 17}}
-            onClick={archiveProjectHandler}
+            onClick={() => projectHandlers(() => updateProject({id, archived: true}))}
           >
             <FolderIcon modal={true}/>
             <Typography className={styles.text}>Move to Done/Archive</Typography>
@@ -73,6 +83,7 @@ const EditProjectModal = ({
             item
             alignItems={'center'}
             style={{marginTop: 17}}
+            onClick={() => projectHandlers(deleteProject)}
           >
             <DeleteIcon/>
             <Typography className={styles.text}>Delete</Typography>

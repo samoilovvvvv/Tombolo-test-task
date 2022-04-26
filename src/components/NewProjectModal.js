@@ -3,8 +3,6 @@ import React, { useState } from 'react'
 import styles from '../styles/NewProjectModal.module.scss'
 import clsx from 'clsx'
 
-import _ from 'lodash'
-
 import {
   Grid,
   Modal,
@@ -19,6 +17,12 @@ import TextField from './StyledTextField'
 import CloseIcon from '@mui/icons-material/Close'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
+import { useProjectContext } from '../context/projectContext';
+
+import { useSnackbar } from 'notistack';
+
+import { addProject, updateProject } from '../api/requests';
+
 const IMAGES = [
   '/images/frodo.jpg',
   '/images/kanye_west.png'
@@ -31,48 +35,57 @@ const NewProjectModal = ({
   id = null,
   rename = false,
   open = false,
-  projects = [],
   onClose = () => {},
-  setProjects = () => {},
   setRename = () => {}
  }) => {
   const [value, setValue] = useState('')
+  
+  const { setData } = useProjectContext()
+  
+  const { enqueueSnackbar } = useSnackbar();
   
   const randomInteger = (min, max) => {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
   }
 
-  const createProjectHandler = () => {
-    const cloneProjects = _.cloneDeep(projects)
-    
-    const newProject = {
-      id: randomInteger(MIN_ID, MAX_ID),
-      name: value,
-      img: IMAGES[randomInteger(0, 1)],
-      my: true
-    }
-    
-    cloneProjects.push(newProject)
-    
-    setProjects(cloneProjects)
-    onClose()
-    setValue('')
-  }
-  
-  const renameProjectHandler = () => {
-    const cloneProjects = _.cloneDeep(projects)
-  
-    for (let project in cloneProjects) {
-      if (cloneProjects[project].id === id) {
-        cloneProjects[project].name = value
+  const projectHandlers = async (type = '', request = () => {}) => {
+    try {
+      const getBody = () => {
+        switch (type) {
+          case 'add':
+            return {
+              id: randomInteger(MIN_ID, MAX_ID),
+              name: value,
+              img: IMAGES[randomInteger(0, 1)],
+              createdBy: 'Ilya'
+            }
+          case 'rename':
+            return {
+              id: id,
+              name: value,
+            }
+          default:
+            return {}
+        }
       }
+    
+      const response = await request(getBody())
+    
+      setData(response.data.data)
+    
+      enqueueSnackbar(response.data.message, {
+        variant: 'success'
+      })
+    } catch(error) {
+      enqueueSnackbar(error.response.data.message, {
+        variant: 'error'
+      })
+    } finally {
+      onClose()
+      setRename()
+      setValue('')
     }
-  
-    setProjects(cloneProjects)
-    onClose()
-    setRename()
-    setValue('')
   }
   
   const onCloseModalHandler = () => {
@@ -141,7 +154,11 @@ const NewProjectModal = ({
             <Button
               variant={'contained'}
               className={clsx(styles.button, styles.createButton)}
-              onClick={ rename ? renameProjectHandler : createProjectHandler}
+              onClick={() => {
+                rename
+                ? projectHandlers('rename', updateProject)
+                : projectHandlers('add', addProject)
+              }}
             >
               { rename ? 'Rename Project' : 'Create Project'}
             </Button>

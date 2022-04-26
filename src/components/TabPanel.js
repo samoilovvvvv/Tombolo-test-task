@@ -9,7 +9,6 @@ const TabPanel = (props) => {
       style={{
         width: '100%',
         maxHeight: 330,
-        overflow: 'auto'
       }}
       hidden={value !== index}
       {...other}

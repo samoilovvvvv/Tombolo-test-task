@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import FooterContainer from '../src/components/FooterContainer';
+import PageContainer from '../src/components/PageContainer';
 import DropDownIcon from '../src/components/icons/DropDownIcon';
 import StyledTabs from '../src/components/StyledTabs';
 import StyledTab from '../src/components/StyledTab';
@@ -21,6 +21,7 @@ import initialProjects from '../src/mocks/projects'
 
 import clsx from 'clsx';
 
+import { useProjectContext } from '../src/context/projectContext';
 
 const Home = () => {
   const [tabValue, setTabValue] = useState(0)
@@ -30,6 +31,8 @@ const Home = () => {
   const [showEditProjectModal, setShowEditProjectModal] = useState(false)
   const [renameProject, setRenameProject] = useState(false)
   const [editingProjectId, setEditingProjectId] = useState(null)
+  
+  const { data, filteredData } = useProjectContext()
   
   const getMessage = () => {
     switch (tabValue) {
@@ -50,22 +53,15 @@ const Home = () => {
     }
   }
   
-  const getTabContent = (filtering = '') => {
-    const projectToShow = projects.filter(project => {
-      if (filtering) {
-        if (project[filtering]) return true
-      } else {
-        return true
-      }
-    })
+  const getTabContent = (data) => {
     
     return (
       <Grid
         container
-        className={clsx({[styles.centeredMessage]: !projectToShow.length})}
+        className={clsx({[styles.centeredMessage]: !data?.length})}
       >
         {
-          projectToShow.length
+          data?.length
             ? (
               <Grid
                 container
@@ -82,7 +78,7 @@ const Home = () => {
                   <Typography className={styles.projectsColumnText} style={{marginRight: 24}}>Owner</Typography>
                 </Grid>
                 {
-                  projectToShow.map((project) => {
+                  data.map((project) => {
                     return (
                       <ProjectCard
                         key={project.id}
@@ -101,20 +97,8 @@ const Home = () => {
     )
   }
   
-  const getProjectCount = (type = '') => {
-    let count = 0
-    
-    if (!type) return projects.length
-    
-    projects.forEach(project => {
-      if (project[type]) count++
-    })
-    
-    return count
-  }
-  
   return (
-    <FooterContainer>
+    <PageContainer>
       <Grid
         container
         direction={'column'}
@@ -136,10 +120,10 @@ const Home = () => {
         >
           <StyledTabs value={tabValue} onChange={(event, newValue) => setTabValue(newValue)}
           >
-            <StyledTab label={`All ${getProjectCount()}`}/>
-            <StyledTab label={`My ${getProjectCount('my')}`}/>
-            <StyledTab label={`Shared ${getProjectCount('shared')}`}/>
-            <StyledTab label={`Archived ${getProjectCount('archived')}`}/>
+            <StyledTab label={`All ${data.length}`}/>
+            <StyledTab label={`My ${filteredData.createdByUser.length}`}/>
+            <StyledTab label={`Shared ${filteredData.sharedData.length}`}/>
+            <StyledTab label={`Archived ${filteredData.archivedData.length}`}/>
           </StyledTabs>
         </Grid>
         <Grid
@@ -161,16 +145,16 @@ const Home = () => {
           className={clsx(styles.contentContainer)}
         >
           <TabPanel value={tabValue} index={0}>
-            {getTabContent()}
+            {getTabContent(data)}
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
-            {getTabContent('my')}
+            {getTabContent(filteredData.createdByUser)}
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
-            {getTabContent('shared')}
+            {getTabContent(filteredData.sharedData)}
           </TabPanel>
           <TabPanel value={tabValue} index={3}>
-            {getTabContent('archived')}
+            {getTabContent(filteredData.archivedData)}
           </TabPanel>
         </Grid>
       </Grid>
@@ -195,7 +179,7 @@ const Home = () => {
           setShowEditProjectModal(false)
         }}
       />
-    </FooterContainer>
+    </PageContainer>
   )
 }
 

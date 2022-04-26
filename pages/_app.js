@@ -11,6 +11,9 @@ import createEmotionCache from '../src/createEmotionCache';
 
 import '../src/styles/globals.css'
 
+import { ProjectProvider } from '../src/context/projectContext';
+import { SnackbarProvider } from 'notistack';
+
 const clientSideEmotionCache = createEmotionCache();
 
 function MyApp({ Component, pageProps, emotionCache =
@@ -37,10 +40,22 @@ function MyApp({ Component, pageProps, emotionCache =
         />
         <meta name="theme-color" content="#317EFB" />
       </Head>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <ProjectProvider>
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={1000}
+          variant="success"
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </SnackbarProvider>
+      </ProjectProvider>
     </CacheProvider>
   );
 }

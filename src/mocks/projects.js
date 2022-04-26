@@ -4,43 +4,44 @@ export default[
     id: 1,
     name: 'First project',
     img: '/images/frodo.jpg',
-    my: true
+    createdBy: 'Ilya'
   },
   {
     id: 2,
     name: 'Second project',
     img: '/images/kanye_west.png',
-    shared: true
+    createdBy: 'Alex'
   },
   {
     id: 3,
     name: 'Third project',
     img: '/images/kanye_west.png',
-    archived: true
+    archived: true,
+    createdBy: 'Ilya'
   },
   {
     id: 4,
     name: 'Fourth project',
     img: '/images/frodo.jpg',
-    my: true,
+    createdBy: 'Alex',
     archived: true
   },
   {
     id: 5,
     name: 'Fifth project',
     img: '/images/kanye_west.png',
-    shared: true
+    createdBy: 'Alex'
   },
   {
     id: 6,
     name: 'Sixth project',
     img: '/images/frodo.jpg',
-    my: true
+    createdBy: 'Ilya'
   },
   {
     id: 7,
     name: 'Seventh project',
     img: '/images/kanye_west.png',
-    shared: true
+    createdBy: 'Alex'
   }
 ]

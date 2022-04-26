@@ -6,9 +6,9 @@ import NotificationIcon from './icons/NotificationIcon';
 import ProfileIcon from './icons/ProfileIcon';
 import WalletIcon from './icons/WalletIcon';
 
-import styles from '../styles/FooterContainer.module.scss'
+import styles from '../styles/PageContainer.module.scss'
 
-const FooterContainer = ({children}) => {
+const PageContainer = ({children}) => {
   
   return (
     <Grid className={styles.wrapper}>
@@ -41,4 +41,4 @@ const FooterContainer = ({children}) => {
   )
 }
 
-export default FooterContainer
+export default PageContainer
